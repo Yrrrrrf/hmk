@@ -56,3 +56,5 @@ bin/
 __pycache__/
 *.lock
 .ruff_cache/
+
+instrucciones.md

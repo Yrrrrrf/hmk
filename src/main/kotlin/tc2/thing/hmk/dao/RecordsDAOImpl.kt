@@ -62,7 +62,7 @@ class RecordsDAOImpl : RecordsDAO {
                     url {
                         parameters.append("juego_id", juegoId.toString())
                         parameters.append("order_by", "puntaje")
-                        parameters.append("order_dir", "desc")
+                        parameters.append("order_dir", "asc")
                         parameters.append("limit", limit.toString())
                     }
                 }
@@ -175,7 +175,7 @@ class RecordsDAOImpl : RecordsDAO {
                     url {
                         parameters.append("juego_id", j.id.toString())
                         parameters.append("order_by", "puntaje")
-                        parameters.append("order_dir", "desc")
+                        parameters.append("order_dir", "asc")
                     }
                 }
                 logger.info("Consult game records response status: ${response.status}")

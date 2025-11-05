@@ -41,5 +41,5 @@ INSERT INTO hmb.juego (nombre) VALUES ('How Many Burgers') ON CONFLICT DO NOTHIN
 -- Indexes for better query performance
 CREATE INDEX IF NOT EXISTS idx_records_usuario_id ON hmb.records(usuario_id);
 CREATE INDEX IF NOT EXISTS idx_records_juego_id ON hmb.records(juego_id);
-CREATE INDEX IF NOT EXISTS idx_records_puntaje ON hmb.records(puntaje DESC);
+CREATE INDEX IF NOT EXISTS idx_records_puntaje ON hmb.records(puntaje ASC);
 CREATE INDEX IF NOT EXISTS idx_records_fecha ON hmb.records(fecha);
