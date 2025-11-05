@@ -50,7 +50,8 @@
         <div class="error"><%= request.getAttribute("errorMessage") %></div>
     <% } %>
     
-    <form method="post" action="register">
+    <%-- MODIFIED: Added context path to form action --%>
+    <form method="post" action="${pageContext.request.contextPath}/register">
         <div class="form-group">
             <label for="login">Username:</label>
             <input type="text" id="login" name="login" required>
@@ -71,7 +72,8 @@
     </form>
     
     <div class="link">
-        <a href="login">Already have an account? Login here</a>
+        <%-- MODIFIED: Added context path to link href --%>
+        <a href="${pageContext.request.contextPath}/login">Already have an account? Login here</a>
     </div>
 </body>
 </html>

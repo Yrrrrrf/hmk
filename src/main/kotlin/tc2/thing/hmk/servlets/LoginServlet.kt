@@ -25,13 +25,12 @@ class LoginServlet : HttpServlet() {
         val usuario = usuariosDAO.authenticate(login, password)
 
         if (usuario != null) {
-            // Create session and store user info
             val session: HttpSession = request.session
             session.setAttribute("usuario", usuario)
             session.setAttribute("isLoggedIn", true)
 
-            // Redirect to game page
-            response.sendRedirect("/game")
+            // MODIFIED: Use contextPath for the redirect
+            response.sendRedirect(request.contextPath + "/game")
         } else {
             request.setAttribute("errorMessage", "Invalid username or password")
             request.getRequestDispatcher("/login.jsp").forward(request, response)
@@ -41,10 +40,9 @@ class LoginServlet : HttpServlet() {
     override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
         val session = request.session
         if (session.getAttribute("isLoggedIn") == true) {
-            // If already logged in, redirect to game
-            response.sendRedirect("/game")
+            // MODIFIED: Use contextPath for the redirect
+            response.sendRedirect(request.contextPath + "/game")
         } else {
-            // Otherwise, show login page
             request.getRequestDispatcher("/login.jsp").forward(request, response)
         }
     }

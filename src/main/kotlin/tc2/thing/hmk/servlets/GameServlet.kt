@@ -23,8 +23,8 @@ class GameServlet : HttpServlet() {
         val isLoggedIn = session.getAttribute("isLoggedIn") == true
         
         if (!isLoggedIn) {
-            // Redirect to login if not logged in
-            response.sendRedirect("/login")
+            // MODIFIED: Use contextPath for the redirect
+            response.sendRedirect(request.contextPath + "/login")
             return
         }
 
@@ -48,7 +48,8 @@ class GameServlet : HttpServlet() {
         val isLoggedIn = session.getAttribute("isLoggedIn") == true
         
         if (!isLoggedIn) {
-            response.sendRedirect("/login")
+            // MODIFIED: Use contextPath for the redirect
+            response.sendRedirect(request.contextPath + "/login")
             return
         }
 
@@ -64,7 +65,8 @@ class GameServlet : HttpServlet() {
 
             val usuario = session.getAttribute("usuario") as? Usuario
             if (usuario == null) {
-                response.sendRedirect("/login")
+                // MODIFIED: Use contextPath for the redirect
+                response.sendRedirect(request.contextPath + "/login")
                 return
             }
 
@@ -78,8 +80,8 @@ class GameServlet : HttpServlet() {
 
             recordsDAO.crear(record)
 
-            // Redirect back to the game page
-            response.sendRedirect("/game")
+            // MODIFIED: Use contextPath for the redirect
+            response.sendRedirect(request.contextPath + "/game")
         } catch (e: Exception) {
             request.setAttribute("errorMessage", e.message ?: "Error saving score")
             request.getRequestDispatcher("/game.jsp").forward(request, response)

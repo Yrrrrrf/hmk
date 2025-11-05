@@ -41,9 +41,9 @@ class RegistrationServlet : HttpServlet() {
             // Save user to database
             val savedUser = usuariosDAO.crear(newUser)
 
-            // Redirect to login page after successful registration
-            request.setAttribute("successMessage", "Registration successful! Please log in.")
-            request.getRequestDispatcher("/login.jsp").forward(request, response)
+            // MODIFIED: Send a redirect instead of forwarding to ensure a clean URL
+            request.session.setAttribute("successMessage", "Registration successful! Please log in.")
+            response.sendRedirect(request.contextPath + "/login")
         } catch (e: Exception) {
             request.setAttribute("errorMessage", e.message ?: "Registration failed")
             request.getRequestDispatcher("/register.jsp").forward(request, response)

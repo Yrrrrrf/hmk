@@ -9,20 +9,18 @@ import jakarta.servlet.http.HttpSession
 @WebServlet(name = "logoutServlet", value = ["/logout"])
 class LogoutServlet : HttpServlet() {
     override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
-        // Invalidate session
         val session: HttpSession = request.session
         session.invalidate()
         
-        // Redirect to home/login
-        response.sendRedirect("/login")
+        // MODIFIED: Use contextPath for the redirect
+        response.sendRedirect(request.contextPath + "/login")
     }
     
     override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
-        // Invalidate session
         val session: HttpSession = request.session
         session.invalidate()
         
-        // Redirect to home/login
-        response.sendRedirect("/login")
+        // MODIFIED: Use contextPath for the redirect
+        response.sendRedirect(request.contextPath + "/login")
     }
 }
