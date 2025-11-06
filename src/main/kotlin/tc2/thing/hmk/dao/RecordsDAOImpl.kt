@@ -79,22 +79,36 @@ class RecordsDAOImpl : RecordsDAO {
                 // you would ideally modify the API to return user data embedded in the record response.
                 // For this guide, we replicate the original logic.
                 recordDTOs.map { dto ->
-                    logger.info("Fetching user and game data for record ID: ${dto.id}")
-                    // Fetch the corresponding Usuario
-                    val usuarioResponse = client.get(usuarioUrl) {
-                        url { parameters.append("id", dto.usuarioId.toString()) }
-                    }
+                    logger.info("Fetching user for record. User ID from DTO: ${dto.usuarioId}")
+                    // Fetch the corresponding Usuario - trying direct ID endpoint approach first
+                    val usuarioResponse = client.get("$usuarioUrl/${dto.usuarioId}")
+                    
                     logger.info("Fetch usuario response status: ${usuarioResponse.status}")
-                    if (!usuarioResponse.status.isSuccess()) {
-                        logger.severe("Failed to fetch user for record ${dto.id}, status: ${usuarioResponse.status}")
-                        throw Exception("Failed to fetch user data for record ${dto.id}")
+                    val usuario = if (usuarioResponse.status.isSuccess()) {
+                        // Direct ID call succeeded
+                        val user = usuarioResponse.body<Usuario>()
+                        logger.info("Fetched user (direct): ${user.login}")
+                        user
+                    } else {
+                        // If the direct ID endpoint doesn't work, try the query parameter approach
+                        logger.warning("Direct ID endpoint failed, trying parameter approach for user ID: ${dto.usuarioId}")
+                        val usuarioResponseFallback = client.get(usuarioUrl) {
+                            url { parameters.append("id", dto.usuarioId.toString()) }
+                        }
+                        logger.info("Fallback fetch usuario response status: ${usuarioResponseFallback.status}")
+                        if (!usuarioResponseFallback.status.isSuccess()) {
+                            logger.severe("Failed to fetch user for record ${dto.id}, status: ${usuarioResponseFallback.status}")
+                            throw Exception("Failed to fetch user data for record ${dto.id}")
+                        }
+                        val usuarios = usuarioResponseFallback.body<List<Usuario>>()
+                        if (usuarios.isEmpty()) {
+                            logger.severe("No user found for ID: ${dto.usuarioId}")
+                            throw Exception("User not found for ID: ${dto.usuarioId}")
+                        }
+                        val user = usuarios.first()
+                        logger.info("Fetched user (fallback): ${user.login}")
+                        user
                     }
-                    val usuarios = usuarioResponse.body<List<Usuario>>()
-                    if (usuarios.isEmpty()) {
-                        logger.severe("No user found for ID: ${dto.usuarioId}")
-                        throw Exception("User not found for ID: ${dto.usuarioId}")
-                    }
-                    val usuario = usuarios.first()
 
                     // Fetch the corresponding Juego
                     val juegoResponse = client.get(juegoUrl) {
@@ -151,7 +165,9 @@ class RecordsDAOImpl : RecordsDAO {
 
                 recordDTOs.firstOrNull()?.let { dto ->
                     logger.info("Found record with ID: ${dto.id}")
-                     Record(
+                    // Log the ID of the usuario being passed into the function
+                    logger.info("User ID passed to function: u.id=${u.id}, login=${u.login}")
+                    Record(
                         id = dto.id,
                         usuario = u, // We already have the user
                         juego = j,   // We already have the game
@@ -189,21 +205,36 @@ class RecordsDAOImpl : RecordsDAO {
 
                 recordDTOs.map { dto ->
                     logger.info("Processing record ID: ${dto.id}")
-                    // Fetch the corresponding Usuario
-                    val usuarioResponse = client.get(usuarioUrl) {
-                        url { parameters.append("id", dto.usuarioId.toString()) }
+                    logger.info("Fetching user for record. User ID from DTO: ${dto.usuarioId}")
+                    // Fetch the corresponding Usuario - trying direct ID endpoint approach first
+                    val usuarioResponse = client.get("$usuarioUrl/${dto.usuarioId}")
+                    
+                    logger.info("Fetch usuario response status: ${usuarioResponse.status}")
+                    val usuario = if (usuarioResponse.status.isSuccess()) {
+                        // Direct ID call succeeded
+                        val user = usuarioResponse.body<Usuario>()
+                        logger.info("Fetched user (direct): ${user.login}")
+                        user
+                    } else {
+                        // If the direct ID endpoint doesn't work, try the query parameter approach
+                        logger.warning("Direct ID endpoint failed, trying parameter approach for user ID: ${dto.usuarioId}")
+                        val usuarioResponseFallback = client.get(usuarioUrl) {
+                            url { parameters.append("id", dto.usuarioId.toString()) }
+                        }
+                        logger.info("Fallback fetch usuario response status: ${usuarioResponseFallback.status}")
+                        if (!usuarioResponseFallback.status.isSuccess()) {
+                            logger.severe("Failed to fetch user for record ${dto.id}, status: ${usuarioResponseFallback.status}")
+                            throw Exception("Failed to fetch user data for record ${dto.id}")
+                        }
+                        val usuarios = usuarioResponseFallback.body<List<Usuario>>()
+                        if (usuarios.isEmpty()) {
+                            logger.severe("No user found for ID: ${dto.usuarioId}")
+                            throw Exception("User not found for ID: ${dto.usuarioId}")
+                        }
+                        val user = usuarios.first()
+                        logger.info("Fetched user (fallback): ${user.login}")
+                        user
                     }
-                    logger.info("Fetch usuario for record ${dto.id} response status: ${usuarioResponse.status}")
-                    if (!usuarioResponse.status.isSuccess()) {
-                        logger.severe("Failed to fetch user for record ${dto.id}, status: ${usuarioResponse.status}")
-                        throw Exception("Failed to fetch user data for record ${dto.id}")
-                    }
-                    val usuarios = usuarioResponse.body<List<Usuario>>()
-                    if (usuarios.isEmpty()) {
-                        logger.severe("No user found for ID: ${dto.usuarioId}")
-                        throw Exception("User not found for ID: ${dto.usuarioId}")
-                    }
-                    val usuario = usuarios.first()
 
                     val juego = j // We already have the game
 
@@ -244,21 +275,36 @@ class RecordsDAOImpl : RecordsDAO {
 
                 recordDTOs.firstOrNull()?.let { dto ->
                     logger.info("Found record to process with ID: ${dto.id}")
-                    // Fetch the corresponding Usuario
-                    val usuarioResponse = client.get(usuarioUrl) {
-                        url { parameters.append("id", dto.usuarioId.toString()) }
+                    logger.info("Fetching user for record. User ID from DTO: ${dto.usuarioId}")
+                    // Fetch the corresponding Usuario - trying direct ID endpoint approach first
+                    val usuarioResponse = client.get("$usuarioUrl/${dto.usuarioId}")
+                    
+                    logger.info("Fetch usuario response status: ${usuarioResponse.status}")
+                    val usuario = if (usuarioResponse.status.isSuccess()) {
+                        // Direct ID call succeeded
+                        val user = usuarioResponse.body<Usuario>()
+                        logger.info("Fetched user (direct): ${user.login}")
+                        user
+                    } else {
+                        // If the direct ID endpoint doesn't work, try the query parameter approach
+                        logger.warning("Direct ID endpoint failed, trying parameter approach for user ID: ${dto.usuarioId}")
+                        val usuarioResponseFallback = client.get(usuarioUrl) {
+                            url { parameters.append("id", dto.usuarioId.toString()) }
+                        }
+                        logger.info("Fallback fetch usuario response status: ${usuarioResponseFallback.status}")
+                        if (!usuarioResponseFallback.status.isSuccess()) {
+                            logger.severe("Failed to fetch user for record ${dto.id}, status: ${usuarioResponseFallback.status}")
+                            throw Exception("Failed to fetch user data for record ${dto.id}")
+                        }
+                        val usuarios = usuarioResponseFallback.body<List<Usuario>>()
+                        if (usuarios.isEmpty()) {
+                            logger.severe("No user found for ID: ${dto.usuarioId}")
+                            throw Exception("User not found for ID: ${dto.usuarioId}")
+                        }
+                        val user = usuarios.first()
+                        logger.info("Fetched user (fallback): ${user.login}")
+                        user
                     }
-                    logger.info("Fetch usuario for record ${dto.id} response status: ${usuarioResponse.status}")
-                    if (!usuarioResponse.status.isSuccess()) {
-                        logger.severe("Failed to fetch user for record ${dto.id}, status: ${usuarioResponse.status}")
-                        throw Exception("Failed to fetch user data for record ${dto.id}")
-                    }
-                    val usuarios = usuarioResponse.body<List<Usuario>>()
-                    if (usuarios.isEmpty()) {
-                        logger.severe("No user found for ID: ${dto.usuarioId}")
-                        throw Exception("User not found for ID: ${dto.usuarioId}")
-                    }
-                    val usuario = usuarios.first()
 
                     // Fetch the corresponding Juego
                     val juegoResponse = client.get(juegoUrl) {

@@ -11,7 +11,7 @@
 <body>
     <div class="container">
         <div class="game-header">
-            <h1>How Many Burgers!</h1>
+            <h1><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDMwIDMwIj48Y2lyY2xlIGN4PSIxNSIgY3k9IjE1IiByPSIxMCIgZmlsbD0iIzRDQUY1MCIvPjx0ZXh0IHg9IjE1IiB5PSIxNyIgZm9udC1zaXplPSIxMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkkiPC90ZXh0Pjwvc3ZnPg==" alt="Burger Logo" style="vertical-align: middle; margin-right: 10px;">How Many Burgers!</h1>
             <div class="game-user-info">
                 <p>Welcome, 
                 <%
@@ -39,17 +39,19 @@
                 <button onclick="makeGuess()">Guess</button>
             </div>
             <div class="feedback">
-                <p id="feedbackMessage">Make your first guess!</p>
+                <div id="feedbackText">Make your first guess!</div>
+                <img id="winImage" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%234CAF50'/%3E%3Ctext x='100' y='100' font-size='20' fill='white' text-anchor='middle' dominant-baseline='middle'%3E%26%23128512%3B%26nbsp%3B%26%23128079%3B%26nbsp%3B%26%23127828%3B%3C/text%3E%3C/svg%3E" style="display:none; max-width: 200px; margin: 10px auto; display: block;">
+                <img id="lowImage" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'%3E%3Crect width='150' height='150' fill='%23FF5722'/%3E%3Ctext x='75' y='75' font-size='16' fill='white' text-anchor='middle' dominant-baseline='middle'%3E%26%23128533%3B%26nbsp%3B%26lt%3B%3C/text%3E%3C/svg%3E" style="display:none; max-width: 150px; margin: 10px auto; display: block;">
+                <img id="highImage" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'%3E%3Crect width='150' height='150' fill='%23FF9800'/%3E%3Ctext x='75' y='75' font-size='16' fill='white' text-anchor='middle' dominant-baseline='middle'%3E%26%23128565%3B%26nbsp%3B%26gt%3B%3C/text%3E%3C/svg%3E" style="display:none; max-width: 150px; margin: 10px auto; display: block;">
             </div>
             <div class="game-controls">
-                <button id="submitScoreButton" onclick="submitScore()" style="display:none;">Submit Score</button>
                 <button onclick="startGame()">New Game</button>
             </div>
         </div>
         
         <div class="scores-section">
             <div class="user-score">
-                <h3>Your Best Score</h3>
+                <h3>Your Scores</h3>
                 <%
                     Record userRecord = (Record) request.getAttribute("userBestScore");
                     if (userRecord != null) {
@@ -62,7 +64,7 @@
             </div>
             
             <div class="top-scores">
-                <h3>Top Scores</h3>
+                <h3>Global Scores</h3>
                 <table>
                     <thead>
                         <tr>
@@ -113,10 +115,13 @@
             gameIsOver = false;
             secretNumber = Math.floor(Math.random() * 100) + 1;
             document.getElementById('attempts').textContent = attempts;
-            document.getElementById('feedbackMessage').textContent = 'Make your first guess!';
+            document.getElementById('feedbackText').textContent = 'Make your first guess!';
+            document.getElementById('feedbackText').style.display = 'block';
+            document.getElementById('winImage').style.display = 'none';
+            document.getElementById('lowImage').style.display = 'none';
+            document.getElementById('highImage').style.display = 'none';
             document.getElementById('guessInput').value = '';
             document.getElementById('guessInput').disabled = false;
-            document.getElementById('submitScoreButton').style.display = 'none';
             document.getElementById('guessInput').focus();
         }
         
@@ -131,7 +136,11 @@
             
             // Validate the input
             if (isNaN(guessValue) || guessValue < 1 || guessValue > 100) {
-                document.getElementById('feedbackMessage').textContent = 'Please enter a number between 1 and 100!';
+                document.getElementById('feedbackText').style.display = 'block';
+                document.getElementById('feedbackText').textContent = 'Please enter a number between 1 and 100!';
+                document.getElementById('lowImage').style.display = 'none';
+                document.getElementById('highImage').style.display = 'none';
+                document.getElementById('winImage').style.display = 'none';
                 return;
             }
             
@@ -141,19 +150,30 @@
             
             // Compare guess to secret number
             if (guessValue < secretNumber) {
-                document.getElementById('feedbackMessage').textContent = 'Me subestimas';
+                // Too low feedback
+                document.getElementById('feedbackText').style.display = 'none';
+                document.getElementById('lowImage').style.display = 'block';
+                document.getElementById('highImage').style.display = 'none';
+                document.getElementById('winImage').style.display = 'none';
             } else if (guessValue > secretNumber) {
-                document.getElementById('feedbackMessage').textContent = '¡No soy tan gordo!';
+                // Too high feedback
+                document.getElementById('feedbackText').style.display = 'none';
+                document.getElementById('lowImage').style.display = 'none';
+                document.getElementById('highImage').style.display = 'block';
+                document.getElementById('winImage').style.display = 'none';
             } else {
                 // Correct guess!
-                document.getElementById('feedbackMessage').textContent = '¡Adivinaste!';
+                document.getElementById('feedbackText').style.display = 'none';
+                document.getElementById('lowImage').style.display = 'none';
+                document.getElementById('highImage').style.display = 'none';
+                document.getElementById('winImage').style.display = 'block';
                 gameIsOver = true;
                 
                 // Disable input and guess button
                 guessInput.disabled = true;
                 
-                // Show the submit score button
-                document.getElementById('submitScoreButton').style.display = 'inline-block';
+                // Immediately call submitScore to automate the process
+                setTimeout(submitScore, 1000); // Wait 1 second before submitting to show the win image
             }
         }
         
