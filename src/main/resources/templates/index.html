@@ -2,92 +2,289 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title th:text="${appName}">HMK</title>
+    <!-- App Icon -->
+    <link rel="icon" type="image/png" href="/images/hamburger.png">
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <!-- SweetAlert2 for the nice popups -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         body {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            /* Vibrant Ocean background */
+            background: radial-gradient(circle at center, #1CB5E0 0%, #000851 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 2rem;
+            padding: 1rem;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            overflow-x: hidden; /* Prevent horizontal scroll from animations */
         }
+
+        /* --- Falling Hamburgers Animation --- */
+        .burger-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Let clicks pass through */
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .burger {
+            position: absolute;
+            top: -50px;
+            font-size: 2rem;
+            animation: fall linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-50px) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- UI Components --- */
+        nav {
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Hero Section & Wapo Styling */
+        .hero-section {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: popIn 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .wapo-container {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 1rem auto;
+            border-radius: 50%;
+            border: 5px solid #FFD700; /* Gold Border */
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+            background: white;
+            transition: transform 0.3s;
+        }
+
+        .wapo-container:hover {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .wapo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .art-frame {
+            display: inline-block;
+            padding: 10px;
+            background: linear-gradient(45deg, #FFD700, #FDB931);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            border-radius: 10px;
+            transform: rotate(-2deg);
+            transition: transform 0.3s;
+        }
+        
+        .art-frame:hover { transform: rotate(0deg) scale(1.05); }
+        .art-frame img { display: block; border: 5px solid #fff; max-width: 200px; height: auto; }
+
+        .main-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-shadow: 3px 3px 0px #000;
+            margin-top: 1rem;
+            color: #FFD700; /* Gold */
+        }
+
+        /* The Main Card */
         .game-container {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            max-width: 600px;
+            background: rgba(255, 255, 255, 0.9); /* More opaque for readability */
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 25px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            max-width: 700px;
             width: 100%;
             text-align: center;
+            color: #2c3e50; /* Dark text for contrast */
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        /* Welcome specific text */
+        .welcome-text {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #444;
+        }
+
+        .btn-big {
+            padding: 1rem;
+            font-size: 1.1rem;
+            border-radius: 15px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        
+        .btn-login { background-color: #007bff; border: none; }
+        .btn-login:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4); }
+        
+        .btn-register { background-color: #e67e22; border: none; }
+        .btn-register:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(230, 126, 34, 0.4); }
+
+        .hidden { display: none; }
+
+        /* Game Input Area */
+        .input-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+
+        input[type="number"] {
+            font-size: 1.5rem;
+            text-align: center;
+            max-width: 150px;
+            border: 2px solid #ddd;
+            border-radius: 15px;
+            background: white;
             color: #333;
         }
-        .hidden { display: none; }
-        h1 { margin-bottom: 0.5rem; color: #1e3c72; }
+
+        .btn-guess {
+            background-color: #007bff;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+
+        /* Leaderboard Styling */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+            margin-top: 1rem;
+        }
+        
+        thead th { border: none; color: #666; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+        tbody tr { background: #f8f9fa; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s; }
+        tbody tr:hover { transform: scale(1.02); }
+        tbody td { padding: 1rem; border: none; }
+        
+        tbody td:first-child { border-top-left-radius: 10px; border-bottom-left-radius: 10px; font-weight: bold; color: #2c3e50; }
+        tbody td:last-child { border-top-right-radius: 10px; border-bottom-right-radius: 10px; color: #e67e22; font-weight: bold; text-align: right; }
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            80% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="game-container">
-        <h1 th:text="${appName}">How Many Krabby Patties?</h1>
-        
-        <!-- Not Logged In -->
-        <div th:unless="${session.user}">
-            <p>Please login to play!</p>
-            <div class="grid">
-                <a href="/login" role="button">Login</a>
-                <a href="/register" role="button" class="secondary">Register</a>
-            </div>
+    <!-- FALLING BURGERS BACKGROUND -->
+    <div class="burger-rain" id="burgerRain">
+        <!-- Javascript will populate this -->
+    </div>
+
+    <!-- NOT LOGGED IN STATE (Enhanced) -->
+    <div th:unless="${session.user}" class="game-container" style="max-width: 450px; margin-top: 5vh;">
+        <!-- The Handsome Squidward Avatar -->
+        <div class="wapo-container">
+            <img src="/images/wapo.jpg" alt="Handsome Squidward">
         </div>
 
-        <!-- Logged In -->
-        <div th:if="${session.user}">
-            <nav>
-                <ul>
-                    <li><strong>Welcome, <span th:text="${session.user.login}">User</span>!</strong></li>
-                </ul>
-                <ul>
-                    <li><a href="/logout" role="button" class="outline contrast" style="padding: 0.2rem 1rem; font-size: 0.8rem;">Logout</a></li>
-                </ul>
-            </nav>
-            
-            <hr>
+        <h1 class="main-title" style="color: #007bff; text-shadow: none; font-size: 2rem;">HMK</h1>
+        <h3 style="color: #666; margin-top: -10px; font-size: 1rem;">The Ultimate Guessing Game</h3>
+        
+        <hr style="margin: 1.5rem 0; opacity: 0.2;">
+        
+        <p class="welcome-text">
+            Join the elite club of patty guessers.<br>
+            <strong>Are you handsome enough to win?</strong>
+        </p>
+        
+        <div class="grid">
+            <a href="/login" role="button" class="btn-big btn-login">Login</a>
+            <a href="/register" role="button" class="btn-big btn-register">Register</a>
+        </div>
+    </div>
 
+    <!-- LOGGED IN STATE -->
+    <div th:if="${session.user}" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+        
+        <nav>
+            <ul>
+                <li><img src="/images/hamburger.png" width="30" style="vertical-align: middle; margin-right: 10px;"> <strong>HMK</strong></li>
+            </ul>
+            <ul>
+                <li>Hello, <span th:text="${session.user.login}" style="color: #FFD700; font-weight: bold;">User</span>!</li>
+                <li><a href="/logout" role="button" class="outline contrast" style="padding: 0.3rem 1rem; font-size: 0.8rem; border-radius: 20px;">Logout</a></li>
+            </ul>
+        </nav>
+
+        <div class="hero-section">
+            <div class="art-frame">
+                <!-- Using the requested Arte.jpg -->
+                <img src="/images/arte.jpg" alt="Bold and Brash">
+            </div>
+            <div class="main-title" th:text="${appName}">How Many Krabby Patties?</div>
+            <small style="opacity: 0.8;">Can you guess the secret number?</small>
+        </div>
+
+        <div class="game-container">
             <!-- Game Area -->
             <div id="game-area">
-                <h3>Guess the number (1-100)</h3>
-                <input type="number" id="guessInput" placeholder="Enter your guess" min="1" max="100">
-                <button onclick="makeGuess()">Guess</button>
-                <p id="feedback" style="font-weight: bold; min-height: 1.5em;"></p>
-                <button id="restartBtn" onclick="startGame()" class="hidden secondary">Play Again</button>
+                <h3 style="margin-bottom: 0;">🔢 Guess (1-100)</h3>
+                
+                <div class="input-group">
+                    <input type="number" id="guessInput" placeholder="?" min="1" max="100">
+                    <button onclick="makeGuess()" class="btn-guess">Guess</button>
+                </div>
+                
+                <p id="feedback" style="font-size: 1.2rem; font-weight: bold; min-height: 1.5em;"></p>
+                <button id="restartBtn" onclick="startGame()" class="hidden contrast" style="width: auto; margin: 0 auto; border-radius: 20px;">Play Again 🔄</button>
             </div>
 
-            <hr>
+            <hr style="margin: 2rem 0; opacity: 0.3;">
 
             <!-- Leaderboard -->
-            <h3>🏆 Leaderboard</h3>
+            <h4 style="text-align: left; margin-bottom: 0.5rem;">🏆 Top Players</h4>
             <table role="grid">
                 <thead>
                     <tr>
                         <th>Player</th>
-                        <th>Score (Attempts)</th>
+                        <th style="text-align: right;">Attempts</th>
                     </tr>
                 </thead>
                 <tbody id="leaderboard-body">
-                    <tr><td colspan="2">Loading...</td></tr>
+                    <tr><td colspan="2" style="text-align: center;">Loading scores...</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- Game Logic -->
+    <!-- Logic -->
     <script th:if="${session.user}" th:inline="javascript">
         /*<![CDATA[*/
-        // Use a safe default of 0 if id is somehow null, though it shouldn't be for a logged in user
         const userId = /*[[${session.user.id}]]*/ 0;
-        const gameId = 1; // Default Game ID
+        const gameId = 1;
         /*]]>*/
 
         let targetNumber = 0;
@@ -98,11 +295,15 @@
             targetNumber = Math.floor(Math.random() * 100) + 1;
             attempts = 0;
             gameOver = false;
-            document.getElementById('guessInput').value = '';
-            document.getElementById('feedback').innerText = '';
+            const input = document.getElementById('guessInput');
+            input.value = '';
+            input.disabled = false;
+            input.focus();
+            
+            document.getElementById('feedback').innerText = 'Start guessing!';
+            document.getElementById('feedback').style.color = "#666";
             document.getElementById('restartBtn').classList.add('hidden');
-            document.getElementById('guessInput').disabled = false;
-            console.log("Game started! Target:", targetNumber); 
+            console.log("Debug: Target is " + targetNumber); 
         }
 
         function makeGuess() {
@@ -110,27 +311,42 @@
             
             const input = document.getElementById('guessInput');
             const guess = parseInt(input.value);
+            const feedback = document.getElementById('feedback');
             
-            if (isNaN(guess)) {
-                document.getElementById('feedback').innerText = "Please enter a number.";
+            if (isNaN(guess) || guess < 1 || guess > 100) {
+                feedback.innerText = "Please enter a number between 1 and 100.";
+                feedback.style.color = "#e74c3c";
                 return;
             }
 
             attempts++;
 
             if (guess === targetNumber) {
-                document.getElementById('feedback').innerText = `🎉 Correct! You won in ${attempts} attempts.`;
-                document.getElementById('feedback').style.color = "green";
+                feedback.innerHTML = ``; // Clear text, use Alert
+                Swal.fire({
+                    title: '🎉 VICTORY!',
+                    text: `You found the number in ${attempts} attempts!`,
+                    imageUrl: '/images/wapo.jpg',
+                    imageWidth: 200,
+                    imageAlt: 'Handsome Victory',
+                    confirmButtonText: 'Awesome!',
+                    confirmButtonColor: '#007bff'
+                });
+                
                 gameOver = true;
                 input.disabled = true;
                 document.getElementById('restartBtn').classList.remove('hidden');
                 submitScore(attempts);
             } else if (guess < targetNumber) {
-                document.getElementById('feedback').innerText = "Too low! Try again.";
-                document.getElementById('feedback').style.color = "orange";
+                feedback.innerText = "Too low! 📉 Try higher.";
+                feedback.style.color = "#e67e22";
+                input.value = '';
+                input.focus();
             } else {
-                document.getElementById('feedback').innerText = "Too high! Try again.";
-                document.getElementById('feedback').style.color = "orange";
+                feedback.innerText = "Too high! 📈 Try lower.";
+                feedback.style.color = "#e67e22";
+                input.value = '';
+                input.focus();
             }
         }
 
@@ -141,43 +357,54 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ userId: userId, gameId: gameId, score: score })
                 });
-                
-                if (response.ok) {
-                    loadLeaderboard();
-                } else {
-                    console.error("Failed to submit score");
-                }
-            } catch (e) {
-                console.error("Error submitting score:", e);
-            }
+                if (response.ok) loadLeaderboard();
+            } catch (e) { console.error(e); }
         }
 
         async function loadLeaderboard() {
             try {
                 const response = await fetch(`/api/scores/top?gameId=${gameId}`);
                 const scores = await response.json();
-                
                 const tbody = document.getElementById('leaderboard-body');
                 tbody.innerHTML = '';
-                
                 if (scores.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="2">No scores yet!</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="2" style="text-align:center">No scores yet.</td></tr>';
                     return;
                 }
-
-                scores.forEach(s => {
-                    const row = `<tr><td>${s.username}</td><td>${s.score}</td></tr>`;
+                scores.forEach((s, index) => {
+                    let rankIcon = index === 0 ? "🥇 " : index === 1 ? "🥈 " : index === 2 ? "🥉 " : "";
+                    const row = `<tr><td>${rankIcon}${s.username}</td><td>${s.score}</td></tr>`;
                     tbody.innerHTML += row;
                 });
-            } catch (e) {
-                console.error("Error loading leaderboard:", e);
-                document.getElementById('leaderboard-body').innerHTML = '<tr><td colspan="2">Error loading scores</td></tr>';
-            }
+            } catch (e) { console.error(e); }
         }
 
-        // Init
+        document.getElementById('guessInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') makeGuess();
+        });
+
         startGame();
         loadLeaderboard();
+    </script>
+
+    <!-- Falling Burgers Script (Always runs) -->
+    <script>
+        function createBurgers() {
+            const container = document.getElementById('burgerRain');
+            const burgerCount = 15; // Number of burgers on screen
+
+            for (let i = 0; i < burgerCount; i++) {
+                const burger = document.createElement('div');
+                burger.classList.add('burger');
+                burger.innerHTML = '🍔';
+                burger.style.left = Math.random() * 100 + 'vw';
+                burger.style.animationDuration = Math.random() * 3 + 2 + 's'; // 2-5 seconds
+                burger.style.animationDelay = Math.random() * 5 + 's';
+                burger.style.fontSize = Math.random() * 1.5 + 1 + 'rem';
+                container.appendChild(burger);
+            }
+        }
+        createBurgers();
     </script>
 </body>
 </html>

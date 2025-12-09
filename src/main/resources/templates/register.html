@@ -2,32 +2,99 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Register - HMK</title>
+    <!-- App Icon -->
+    <link rel="icon" type="image/png" href="/images/hamburger.png">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
-    <style>body { display: flex; justify-content: center; align-items: center; height: 100vh; background: #2a5298; }</style>
+    <style>
+        body {
+            /* Slightly different ocean gradient */
+            background: linear-gradient(135deg, #141E30 0%, #243B55 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border-radius: 20px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            animation: slideIn 0.8s ease-out;
+            color: white;
+        }
+
+        .logo-container { text-align: center; margin-bottom: 1rem; }
+        .logo-container img { width: 60px; opacity: 0.8; }
+
+        h2 { text-align: center; margin-bottom: 2rem; color: #fff; }
+        label { color: #e0e0e0; font-weight: 600; }
+
+        input {
+            background: rgba(0, 0, 0, 0.3) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            border-radius: 10px !important;
+        }
+
+        input:focus {
+            border-color: #4fc3f7 !important; /* Light Blue */
+            box-shadow: 0 0 0 0.2rem rgba(79, 195, 247, 0.25) !important;
+        }
+
+        button {
+            background-color: #43a047 !important; /* Success Green */
+            border: none !important;
+            border-radius: 10px !important;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(67, 160, 71, 0.4); }
+
+        a { color: #ffca28; text-decoration: none; }
+        a:hover { color: #ffe082; text-decoration: underline; }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
 </head>
 <body>
-    <main class="container" style="max-width: 400px; padding: 2rem; background: rgba(255,255,255,0.9); border-radius: 10px;">
-        <h2 style="text-align: center; color: #333;">📝 Register</h2>
+    <main class="glass-card">
+        <div class="logo-container">
+            <img src="/images/hamburger.png" alt="Logo">
+        </div>
+        <h2>Join the Club</h2>
         
-        <div th:if="${error}" style="color: red; text-align: center;" th:text="${error}"></div>
+        <div th:if="${error}" style="background: rgba(231, 76, 60, 0.2); padding: 10px; border-radius: 8px; color: #e74c3c; text-align: center; margin-bottom: 1rem;" th:text="${error}"></div>
 
         <form method="post" th:action="@{/register}" th:object="${userForm}">
-            <label style="color: #333;">Username</label>
-            <input type="text" th:field="*{login}" />
-            <small style="color: red" th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></small>
+            <label>Username</label>
+            <input type="text" th:field="*{login}" placeholder="Choose a username" required />
+            <small style="color: #ff8a80" th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></small>
 
-            <label style="color: #333;">Email (Optional)</label>
-            <input type="email" th:field="*{email}" />
+            <label>Email (Optional)</label>
+            <input type="email" th:field="*{email}" placeholder="your@email.com" />
 
-            <label style="color: #333;">Password</label>
-            <input type="password" th:field="*{password}" />
-            <small style="color: red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
+            <label>Password</label>
+            <input type="password" th:field="*{password}" placeholder="Create a password" required />
+            <small style="color: #ff8a80" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
 
-            <button type="submit">Sign Up</button>
+            <button type="submit" style="margin-top: 1rem;">SIGN UP</button>
         </form>
-        <p style="text-align: center; color: #333;">
-            <a th:href="@{/login}">Back to Login</a>
+        <p style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem;">
+            Already have an account? <a th:href="@{/login}">Back to Login</a>
         </p>
     </main>
 </body>
