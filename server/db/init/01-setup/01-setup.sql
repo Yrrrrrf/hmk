@@ -1,6 +1,6 @@
 -- File: 01_schema_setup.sql
 -- # Script steps:
---     1. Creates specified schemas with a logical structure for How Many Burgers! game
+--     1. Creates specified schemas with a logical structure for How Many Krabby Patties! game
 --     2. Creates roles with appropriate permissions
 --     3. Establishes cross-schema access where necessary
 --
@@ -87,13 +87,13 @@ $$ LANGUAGE plpgsql;
 -- Create schemas
 SELECT create_schemas(ARRAY[
     -- * main schemas
-    'hmb'         -- For How Many Burgers! game data
+    'hmk'         -- For How Many Krabby Patties! game data
 ]);
 
 -- -- * Create roles and grant privileges for each schema
 -- SELECT create_and_grant_role(
 --     'director',
 --     'secure_director_pwd',
---     ARRAY['hmb'],
+--     ARRAY['hmk'],
 --     ARRAY[]::TEXT[]
 -- );

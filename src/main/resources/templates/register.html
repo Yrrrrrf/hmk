@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - HMK</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <style>body { display: flex; justify-content: center; align-items: center; height: 100vh; background: #2a5298; }</style>
+</head>
+<body>
+    <main class="container" style="max-width: 400px; padding: 2rem; background: rgba(255,255,255,0.9); border-radius: 10px;">
+        <h2 style="text-align: center; color: #333;">📝 Register</h2>
+        
+        <div th:if="${error}" style="color: red; text-align: center;" th:text="${error}"></div>
+
+        <form method="post" th:action="@{/register}" th:object="${userForm}">
+            <label style="color: #333;">Username</label>
+            <input type="text" th:field="*{login}" />
+            <small style="color: red" th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></small>
+
+            <label style="color: #333;">Email (Optional)</label>
+            <input type="email" th:field="*{email}" />
+
+            <label style="color: #333;">Password</label>
+            <input type="password" th:field="*{password}" />
+            <small style="color: red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
+
+            <button type="submit">Sign Up</button>
+        </form>
+        <p style="text-align: center; color: #333;">
+            <a th:href="@{/login}">Back to Login</a>
+        </p>
+    </main>
+</body>
+</html>

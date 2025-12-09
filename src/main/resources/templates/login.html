@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - HMK</title>
+    <!-- Use a simple CDN for styles for now, or link your css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <style>body { display: flex; justify-content: center; align-items: center; height: 100vh; background: #1e3c72; }</style>
+</head>
+<body>
+    <main class="container" style="max-width: 400px; padding: 2rem; background: rgba(255,255,255,0.9); border-radius: 10px;">
+        <h2 style="text-align: center; color: #333;">🍔 Login</h2>
+        
+        <div th:if="${param.registered}" style="color: green; text-align: center; margin-bottom: 1rem;">
+            Registration successful! Please login.
+        </div>
+        <div th:if="${error}" style="color: red; text-align: center; margin-bottom: 1rem;" th:text="${error}"></div>
+
+        <form method="post" th:action="@{/login}" th:object="${userForm}">
+            <label for="login" style="color: #333;">Username</label>
+            <input type="text" id="login" th:field="*{login}" required />
+
+            <label for="password" style="color: #333;">Password</label>
+            <input type="password" id="password" th:field="*{password}" required />
+
+            <button type="submit">Log In</button>
+        </form>
+        <p style="text-align: center; color: #333;">
+            No account? <a th:href="@{/register}">Register here</a>
+        </p>
+    </main>
+</body>
+</html>

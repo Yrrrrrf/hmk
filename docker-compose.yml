@@ -1,71 +1,54 @@
-# GWA Docker Compose
-
-# Define common environment variables
-x-common-env: &common-env
-  DB_NAME: ${DB_NAME:-db}
-  DB_OWNER_ADMIN: ${DB_OWNER_ADMIN:-db_owner}
-  DB_OWNER_PWORD: ${DB_OWNER_PWORD:-password}
-
 services:
+  # 1. The Database
   db:
     build:
-      context: ./server/db/
+      context: ./server/db
       dockerfile: db.Dockerfile
-    container_name: db-db
+    container_name: hmk-db
     environment:
-      <<: *common-env # Include all common variables
-      # PostgreSQL-specific variables
-      POSTGRES_DB: ${DB_NAME:-db}
-      POSTGRES_USER: ${DB_OWNER_ADMIN:-db_owner}
+      POSTGRES_DB: hmk
+      DB_NAME: ${DB_NAME:-hmk}
+      POSTGRES_USER: ${DB_OWNER_ADMIN:-hmk_owner}
       POSTGRES_PASSWORD: ${DB_OWNER_PWORD:-password}
+      DB_OWNER_ADMIN: ${DB_OWNER_ADMIN:-hmk_owner}
+      DB_OWNER_PWORD: ${DB_OWNER_PWORD:-password}
       TZ: UTC
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - hmk_postgres_data:/var/lib/postgresql/data
     networks:
-      - db-network
+      - hmk-network
     healthcheck:
-      test: [
-        "CMD-SHELL",
-        "pg_isready -U ${DB_OWNER_ADMIN:-db_owner} -d ${DB_NAME:-db}",
-      ]
-      interval: 10s
+      test: ["CMD-SHELL", "pg_isready -U ${DB_OWNER_ADMIN:-hmk_owner} -d hmk"]
+      interval: 5s
       timeout: 5s
       retries: 5
-      start_period: 10s
 
-  api:
+  # 2. The Spring Boot Application
+  app:
     build:
-      context: ./server/api/
-      dockerfile: api.Dockerfile
-    container_name: db-api
-    environment:
-      <<: *common-env # Include all common variables
-      DB_HOST: db-db
-      PYTHONDONTWRITEBYTECODE: 1
-      PYTHONUNBUFFERED: 1
+      context: .
+      dockerfile: Dockerfile
+    container_name: hmk-app
     ports:
-      - "8000:8000"
-    volumes:
-      - ./server/api:/app
+      - "8080:8080" # Maps localhost:8080 to container:8080
+    environment:
+      # Connects to the 'db' service defined above
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/hmk
+      - SPRING_DATASOURCE_USERNAME=${DB_OWNER_ADMIN:-hmk_owner}
+      - SPRING_DATASOURCE_PASSWORD=${DB_OWNER_PWORD:-password}
+      # 'update' keeps schema in sync, 'validate' ensures code matches DB
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     depends_on:
       db:
         condition: service_healthy
     networks:
-      - db-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 10s # Reduced from 30s
-      timeout: 5s # Reduced from 10s
-      retries: 5 # Increased from 3
-      start_period: 5s # Reduced from 10s
+      - hmk-network
 
 networks:
-  db-network:
-    name: db-network
+  hmk-network:
     driver: bridge
 
 volumes:
-  postgres_data:
-    name: db-postgres-data
+  hmk_postgres_data:
