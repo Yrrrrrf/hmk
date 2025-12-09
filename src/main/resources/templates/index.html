@@ -3,51 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${appName}">HMK</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            height: 100vh;
-            margin: 0;
+            min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding: 2rem;
         }
-        .container {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 3rem;
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
             border-radius: 15px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            color: #333;
         }
-        h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
-        .burger-icon { font-size: 4rem; display: block; margin-bottom: 1rem; animation: float 3s ease-in-out infinite; }
-        .status { color: #4ade80; font-weight: bold; font-size: 1.2rem; }
-        .time { margin-top: 2rem; opacity: 0.8; font-size: 0.9rem; }
-        
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
+        .hidden { display: none; }
+        h1 { margin-bottom: 0.5rem; color: #1e3c72; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <span class="burger-icon">🍔</span>
-        <h1 th:text="${appName}">App Name</h1>
-        <p th:text="${message}">Message</p>
+
+    <div class="game-container">
+        <h1 th:text="${appName}">How Many Krabby Patties?</h1>
         
-        <div style="margin-top: 20px;">
-            Status: <span class="status" th:text="${status}">Checking...</span>
+        <!-- Not Logged In -->
+        <div th:unless="${session.user}">
+            <p>Please login to play!</p>
+            <div class="grid">
+                <a href="/login" role="button">Login</a>
+                <a href="/register" role="button" class="secondary">Register</a>
+            </div>
         </div>
 
-        <div class="time">
-            Server Time: <span th:text="${serverTime}">--</span>
+        <!-- Logged In -->
+        <div th:if="${session.user}">
+            <nav>
+                <ul>
+                    <li><strong>Welcome, <span th:text="${session.user.login}">User</span>!</strong></li>
+                </ul>
+                <ul>
+                    <li><a href="/logout" role="button" class="outline contrast" style="padding: 0.2rem 1rem; font-size: 0.8rem;">Logout</a></li>
+                </ul>
+            </nav>
+            
+            <hr>
+
+            <!-- Game Area -->
+            <div id="game-area">
+                <h3>Guess the number (1-100)</h3>
+                <input type="number" id="guessInput" placeholder="Enter your guess" min="1" max="100">
+                <button onclick="makeGuess()">Guess</button>
+                <p id="feedback" style="font-weight: bold; min-height: 1.5em;"></p>
+                <button id="restartBtn" onclick="startGame()" class="hidden secondary">Play Again</button>
+            </div>
+
+            <hr>
+
+            <!-- Leaderboard -->
+            <h3>🏆 Leaderboard</h3>
+            <table role="grid">
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th>Score (Attempts)</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body">
+                    <tr><td colspan="2">Loading...</td></tr>
+                </tbody>
+            </table>
         </div>
     </div>
+
+    <!-- Game Logic -->
+    <script th:if="${session.user}" th:inline="javascript">
+        /*<![CDATA[*/
+        // Use a safe default of 0 if id is somehow null, though it shouldn't be for a logged in user
+        const userId = /*[[${session.user.id}]]*/ 0;
+        const gameId = 1; // Default Game ID
+        /*]]>*/
+
+        let targetNumber = 0;
+        let attempts = 0;
+        let gameOver = false;
+
+        function startGame() {
+            targetNumber = Math.floor(Math.random() * 100) + 1;
+            attempts = 0;
+            gameOver = false;
+            document.getElementById('guessInput').value = '';
+            document.getElementById('feedback').innerText = '';
+            document.getElementById('restartBtn').classList.add('hidden');
+            document.getElementById('guessInput').disabled = false;
+            console.log("Game started! Target:", targetNumber); 
+        }
+
+        function makeGuess() {
+            if (gameOver) return;
+            
+            const input = document.getElementById('guessInput');
+            const guess = parseInt(input.value);
+            
+            if (isNaN(guess)) {
+                document.getElementById('feedback').innerText = "Please enter a number.";
+                return;
+            }
+
+            attempts++;
+
+            if (guess === targetNumber) {
+                document.getElementById('feedback').innerText = `🎉 Correct! You won in ${attempts} attempts.`;
+                document.getElementById('feedback').style.color = "green";
+                gameOver = true;
+                input.disabled = true;
+                document.getElementById('restartBtn').classList.remove('hidden');
+                submitScore(attempts);
+            } else if (guess < targetNumber) {
+                document.getElementById('feedback').innerText = "Too low! Try again.";
+                document.getElementById('feedback').style.color = "orange";
+            } else {
+                document.getElementById('feedback').innerText = "Too high! Try again.";
+                document.getElementById('feedback').style.color = "orange";
+            }
+        }
+
+        async function submitScore(score) {
+            try {
+                const response = await fetch('/api/scores', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: userId, gameId: gameId, score: score })
+                });
+                
+                if (response.ok) {
+                    loadLeaderboard();
+                } else {
+                    console.error("Failed to submit score");
+                }
+            } catch (e) {
+                console.error("Error submitting score:", e);
+            }
+        }
+
+        async function loadLeaderboard() {
+            try {
+                const response = await fetch(`/api/scores/top?gameId=${gameId}`);
+                const scores = await response.json();
+                
+                const tbody = document.getElementById('leaderboard-body');
+                tbody.innerHTML = '';
+                
+                if (scores.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="2">No scores yet!</td></tr>';
+                    return;
+                }
+
+                scores.forEach(s => {
+                    const row = `<tr><td>${s.username}</td><td>${s.score}</td></tr>`;
+                    tbody.innerHTML += row;
+                });
+            } catch (e) {
+                console.error("Error loading leaderboard:", e);
+                document.getElementById('leaderboard-body').innerHTML = '<tr><td colspan="2">Error loading scores</td></tr>';
+            }
+        }
+
+        // Init
+        startGame();
+        loadLeaderboard();
+    </script>
 </body>
 </html>

@@ -23,6 +23,11 @@ class UserRepositoryImpl(
         return entity?.let { mapper.toDomain(it) }
     }
 
+    override fun findById(id: Long): User? {
+        val entity = jpaRepository.findById(id).orElse(null)
+        return entity?.let { mapper.toDomain(it) }
+    }
+
     override fun findAll(): List<User> {
         return mapper.toDomainList(jpaRepository.findAll())
     }
