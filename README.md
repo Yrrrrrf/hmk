@@ -41,7 +41,6 @@
     ```
 
 3.  **Acceder a los Servicios**:
-    -   **Documentación de la API**: [http://localhost:8000/docs](http://localhost:8000/docs)
     -   **Aplicación Web**: [http://localhost:8080](http://localhost:8080) (o el puerto configurado para el servidor servlet)
 
 ## 👥 Usuarios de Ejemplo
@@ -61,11 +60,22 @@ La aplicación viene con usuarios predefinidos para probarla:
 4. El juego te dirá si tu número es mayor o menor
 5. ¡Trata de adivinarlo en la menor cantidad de intentos!
 
+## 🔌 Endpoints de la API (JSON)
+
+Además de la interfaz web, el sistema expone una API REST completa.
+
+| Método | Endpoint | Descripción | Payload / Parámetros |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/users/all` | Listar todos los usuarios | N/A |
+| `POST` | `/api/users/save` | Registrar un usuario | `{"login": "...", "password": "..."}` |
+| `DELETE`| `/api/users/{id}`| Eliminar un usuario | N/A |
+| `POST` | `/api/scores` | Guardar un puntaje | `{"gameId": 1, "score": 10}` |
+| `GET` | `/api/scores/top` | Top 10 mejores puntajes | `?gameId=1` |
+
 ## 🔧 Puertos Usados
 
-- Puerto web: 8080
-- Puerto API: 8000
-- Puerto base de datos: 5432
+- Puerto web: [8080](http://localhost:8080)
+- Puerto base de datos: [5432](http://localhost:5432)
 
 ## 📄 Licencia
 

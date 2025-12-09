@@ -42,3 +42,45 @@ POST {{host}}/login
 Content-Type: application/x-www-form-urlencoded
 
 login=player1&password=pass1
+
+###
+
+# ==========================================
+# 5. TEST VALIDATION: Empty Username
+# ==========================================
+# Expecting: 400 Bad Request (Validation Error)
+POST {{host}}/api/users/save
+Content-Type: {{contentType}}
+
+{
+    "login": "",
+    "password": "123"
+}
+
+###
+
+# ==========================================
+# 6. TEST VALIDATION: Short Password
+# ==========================================
+# Expecting: 400 Bad Request (Password min 3 chars)
+POST {{host}}/api/users/save
+Content-Type: {{contentType}}
+
+{
+    "login": "validUser",
+    "password": "12"
+}
+
+###
+
+# ==========================================
+# 7. TEST SQL INJECTION ATTEMPT (Sanity Check)
+# ==========================================
+# JPA should handle this safely and treat it as a literal string
+POST {{host}}/api/users/save
+Content-Type: {{contentType}}
+
+{
+    "login": "hacker' OR '1'='1",
+    "password": "password"
+}
