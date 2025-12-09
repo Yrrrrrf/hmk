@@ -30,4 +30,16 @@ class AuthService(private val userRepository: UserRepository) {
         // Simple plain text password check as requested
         return if (user.password == form.password) user else null
     }
+
+    fun findAll(): List<User> {
+        return userRepository.findAll()
+    }
+
+    fun delete(id: Long) {
+        userRepository.deleteById(id)
+    }
+
+    fun save(user: User): User {
+        return userRepository.save(user)
+    }
 }
