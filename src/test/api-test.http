@@ -2,7 +2,7 @@
 @contentType = application/json
 
 # ==========================================
-# 1. GET ALL USERS
+# 1. HAPPY PATH: GET ALL USERS
 # ==========================================
 GET {{host}}/api/users/all
 Accept: {{contentType}}
@@ -10,7 +10,7 @@ Accept: {{contentType}}
 ###
 
 # ==========================================
-# 2. SAVE NEW USER
+# 2. HAPPY PATH: SAVE NEW USER
 # ==========================================
 # @name createUser
 POST {{host}}/api/users/save
@@ -25,30 +25,9 @@ Content-Type: {{contentType}}
 ###
 
 # ==========================================
-# 3. DELETE USER
+# 3. TEST DE VALIDACIÓN: Usuario Vacío
 # ==========================================
-# ⚠️ MANUAL STEP: 
-# VS Code's basic REST Client cannot auto-save variables from responses like IntelliJ.
-# You must copy the 'id' from the Response of Step 2 
-# and replace '1' below with that number.
-DELETE {{host}}/api/users/1
-
-###
-
-# ==========================================
-# 4. TEST LOGIN (Form Data)
-# ==========================================
-POST {{host}}/login
-Content-Type: application/x-www-form-urlencoded
-
-login=player1&password=pass1
-
-###
-
-# ==========================================
-# 5. TEST VALIDATION: Empty Username
-# ==========================================
-# Expecting: 400 Bad Request (Validation Error)
+# Esperamos: 400 Bad Request o Error de Validación
 POST {{host}}/api/users/save
 Content-Type: {{contentType}}
 
@@ -60,9 +39,9 @@ Content-Type: {{contentType}}
 ###
 
 # ==========================================
-# 6. TEST VALIDATION: Short Password
+# 4. TEST DE VALIDACIÓN: Password Corta
 # ==========================================
-# Expecting: 400 Bad Request (Password min 3 chars)
+# Esperamos: 400 Bad Request (Password min 3 chars)
 POST {{host}}/api/users/save
 Content-Type: {{contentType}}
 
@@ -74,9 +53,10 @@ Content-Type: {{contentType}}
 ###
 
 # ==========================================
-# 7. TEST SQL INJECTION ATTEMPT (Sanity Check)
+# 5. TEST DE SEGURIDAD: SQL Injection Básico
 # ==========================================
-# JPA should handle this safely and treat it as a literal string
+# JPA debería manejar esto y guardar el usuario literalmente,
+# NO ejecutar el SQL malicioso.
 POST {{host}}/api/users/save
 Content-Type: {{contentType}}
 
@@ -84,3 +64,35 @@ Content-Type: {{contentType}}
     "login": "hacker' OR '1'='1",
     "password": "password"
 }
+
+###
+
+# ==========================================
+# 6. SCORE: Registrar Puntaje
+# ==========================================
+# Nota: Esto requiere que tengas una sesión válida o
+# que modifiques el Controller para aceptar userId en el body por ahora.
+POST {{host}}/api/scores
+Content-Type: {{contentType}}
+
+{
+    "gameId": 1,
+    "score": 5
+}
+
+###
+
+# ==========================================
+# 7. SCORE: Ver Leaderboard
+# ==========================================
+GET {{host}}/api/scores/top?gameId=1
+Accept: {{contentType}}
+
+###
+
+# ==========================================
+# 8. HAPPY PATH: DELETE USER
+# ==========================================
+# ⚠️ PASO MANUAL:
+# Reemplaza el '1' con el ID real que quieras borrar.
+DELETE {{host}}/api/users/1
