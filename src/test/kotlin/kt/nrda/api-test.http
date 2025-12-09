@@ -8,6 +8,7 @@
 GET {{host}}/api/users/all
 Accept: {{contentType}}
 
+# ignore_unused
 > {%
     client.test("Request executed successfully", function() {
         client.assert(response.status === 200, "Response status is not 200");
