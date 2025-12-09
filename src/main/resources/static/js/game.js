@@ -24,7 +24,7 @@ function startGame() {
     input.disabled = false;
     input.focus();
     
-    feedback.innerText = 'Start guessing!';
+    feedback.innerText = '¡Empieza a adivinar!';
     feedback.style.color = "#666";
     restartBtn.classList.add('hidden');
     
@@ -42,8 +42,8 @@ function makeGuess() {
     if (isNaN(guess) || guess < 1 || guess > 100) {
         Swal.fire({
             icon: 'error',
-            title: 'Oops...',
-            text: 'Please enter a number between 1 and 100!',
+            title: 'Uy...',
+            text: '¡Por favor ingresa un número entre 1 y 100!',
             confirmButtonColor: '#ff6b6b'
         });
         return;
@@ -54,11 +54,11 @@ function makeGuess() {
     if (guess === targetNumber) {
         handleVictory(attempts);
     } else if (guess < targetNumber) {
-        feedback.innerHTML = "Too low! 📉 <span style='color:#e67e22'>Try higher.</span>";
+        feedback.innerHTML = "¡Muy bajo! 📉 <span style='color:#e67e22'>Intenta más alto.</span>";
         input.value = '';
         input.focus();
     } else {
-        feedback.innerHTML = "Too high! 📈 <span style='color:#e67e22'>Try lower.</span>";
+        feedback.innerHTML = "¡Muy alto! 📈 <span style='color:#e67e22'>Intenta más bajo.</span>";
         input.value = '';
         input.focus();
     }
@@ -72,8 +72,8 @@ function handleVictory(attempts) {
 
     // SweetAlert2 Effect
     Swal.fire({
-        title: '🎉 VICTORY!',
-        html: `You found the number in <b>${attempts}</b> attempts!`,
+        title: '🎉 ¡VICTORIA!',
+        html: `¡Encontraste el número en <b>${attempts}</b> intentos!`,
         imageUrl: '/images/wapo.jpg', // Make sure this image exists
         imageWidth: 150,
         imageAlt: 'Victory Image',
@@ -83,7 +83,7 @@ function handleVictory(attempts) {
             left top
             no-repeat
         `,
-        confirmButtonText: 'Awesome!',
+        confirmButtonText: '¡Genial!',
         confirmButtonColor: '#007bff'
     });
 
@@ -119,7 +119,7 @@ async function loadLeaderboard() {
         tbody.innerHTML = ''; // Clear existing
         
         if (scores.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="2" style="text-align:center">No scores yet. Be the first!</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="2" style="text-align:center">Aún no hay puntuaciones. ¡Sé el primero!</td></tr>';
             return;
         }
 

@@ -75,26 +75,26 @@
         <div class="logo-container">
             <img src="/images/hamburger.png" alt="Logo">
         </div>
-        <h2>Join the Club</h2>
+        <h2>Únete al Club</h2>
         
         <div th:if="${error}" style="background: rgba(231, 76, 60, 0.2); padding: 10px; border-radius: 8px; color: #e74c3c; text-align: center; margin-bottom: 1rem;" th:text="${error}"></div>
 
         <form method="post" th:action="@{/register}" th:object="${userForm}">
-            <label>Username</label>
-            <input type="text" th:field="*{login}" placeholder="Choose a username" required />
+            <label>Nombre de usuario</label>
+            <input type="text" th:field="*{login}" placeholder="Elige un nombre de usuario" required />
             <small style="color: #ff8a80" th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></small>
 
-            <label>Email (Optional)</label>
-            <input type="email" th:field="*{email}" placeholder="your@email.com" />
+            <label>Correo electrónico (Opcional)</label>
+            <input type="email" th:field="*{email}" placeholder="tu@email.com" />
 
-            <label>Password</label>
-            <input type="password" th:field="*{password}" placeholder="Create a password" required />
+            <label>Contraseña</label>
+            <input type="password" th:field="*{password}" placeholder="Crea una contraseña" required />
             <small style="color: #ff8a80" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
 
-            <button type="submit" style="margin-top: 1rem;">SIGN UP</button>
+            <button type="submit" style="margin-top: 1rem;">REGISTRARSE</button>
         </form>
         <p style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem;">
-            Already have an account? <a th:href="@{/login}">Back to Login</a>
+            ¿Ya tienes una cuenta? <a th:href="@{/login}">Volver al inicio de sesión</a>
         </p>
     </main>
 </body>
