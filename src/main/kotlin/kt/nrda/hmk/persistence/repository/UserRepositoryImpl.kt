@@ -31,4 +31,8 @@ class UserRepositoryImpl(
     override fun findAll(): List<User> {
         return mapper.toDomainList(jpaRepository.findAll())
     }
+
+    override fun deleteById(id: Long) {
+        jpaRepository.deleteById(id)
+    }
 }

@@ -17,7 +17,7 @@ class AuthService(private val userRepository: UserRepository) {
         // Create new User Domain Object
         val newUser = User(
             login = form.login,
-            password = form.password, // In a real app, hash this!
+            password = form.password, // Passwords stored as plain text as requested
             email = form.email
         )
 
@@ -27,7 +27,7 @@ class AuthService(private val userRepository: UserRepository) {
     fun login(form: UserForm): User? {
         val user = userRepository.findByLogin(form.login) ?: return null
         
-        // Simple password check (matches your old logic)
+        // Simple plain text password check as requested
         return if (user.password == form.password) user else null
     }
 }

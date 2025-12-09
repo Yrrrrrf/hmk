@@ -1,8 +1,11 @@
 package kt.nrda.hmk.web.controller
 
+import jakarta.servlet.http.HttpSession
+import kt.nrda.hmk.domain.model.User
 import kt.nrda.hmk.service.ScoreService
 import kt.nrda.hmk.web.dto.ScoreResponse
 import kt.nrda.hmk.web.dto.ScoreSubmission
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -11,8 +14,18 @@ import org.springframework.web.bind.annotation.*
 class ScoreController(private val scoreService: ScoreService) {
 
     @PostMapping
-    fun submitScore(@RequestBody submission: ScoreSubmission): ResponseEntity<ScoreResponse> {
-        val score = scoreService.submitScore(submission.userId, submission.gameId, submission.score)
+    fun submitScore(
+        @RequestBody submission: ScoreSubmission,
+        session: HttpSession
+    ): ResponseEntity<*> {
+        // Securely retrieve the user from the session
+        val user = session.getAttribute("user") as? User
+            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(mapOf("error" to "Not logged in"))
+
+        // user.id should not be null if it came from the DB
+        val userId = user.id ?: return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mapOf("error" to "Invalid user state"))
+
+        val score = scoreService.submitScore(userId, submission.gameId, submission.score)
         val response = ScoreResponse(
             username = score.user.login,
             score = score.score,

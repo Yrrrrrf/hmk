@@ -8,4 +8,5 @@ interface UserRepository {
     fun findByLogin(login: String): User?
     fun findById(id: Long): User?
     fun findAll(): List<User>
+    fun deleteById(id: Long)
 }
