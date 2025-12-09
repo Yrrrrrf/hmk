@@ -22,7 +22,7 @@ un código limpio y mantenible.
 El juego desafía a los usuarios a adivinar un número secreto, registrando sus
 intentos y compitiendo en una tabla de clasificación global en tiempo real.
 
-## 🛠️ Stack Tecnológico
+## Stack Tecnológico
 
 - **Backend**: Kotlin con Spring Boot (Web MVC, Data JPA).
 - **Base de Datos**: PostgreSQL 16+, orquestada con Docker.
@@ -32,7 +32,7 @@ intentos y compitiendo en una tabla de clasificación global en tiempo real.
   DTOs.
 - **Arquitectura**: Diseño en capas (Web, Servicio, Dominio, Persistencia).
 
-## 🚦 Inicio Rápido
+## Inicio Rápido
 
 ### Prerrequisitos
 
@@ -53,7 +53,7 @@ intentos y compitiendo en una tabla de clasificación global en tiempo real.
    - La base de datos se inicializa automáticamente con el esquema y datos de
      prueba.
 
-## 👥 Usuarios de Ejemplo
+## Usuarios de Ejemplo
 
 El sistema precarga usuarios para facilitar las pruebas:
 
@@ -61,7 +61,7 @@ El sistema precarga usuarios para facilitar las pruebas:
 - **Usuario**: `player2`, **Contraseña**: `pass2`
 - **Usuario**: `player3`, **Contraseña**: `pass3`
 
-## 🔌 Endpoints de la API (JSON)
+## Endpoints de la API (JSON)
 
 El backend expone una API RESTful documentada a continuación:
 
@@ -81,7 +81,11 @@ El backend expone una API RESTful documentada a continuación:
 4. El sistema te dará pistas (Mayor/Menor).
 5. ¡Gana e intenta entrar al Top 3!
 
-## 🔧 Configuración Técnica
+## Interfaz
+
+![game](./docs/game.png)
+
+## Configuración Técnica
 
 - **Puerto Web**: [8080](http://localhost:8080)
 - **Puerto BD**: [5432](http://localhost:5432)
