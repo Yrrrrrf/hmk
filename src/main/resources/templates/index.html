@@ -1,40 +1,39 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<!-- Import Head Fragment -->
-<head th:replace="~{fragments/layout :: headContent}"></head>
+  <!-- Import Head Fragment -->
+  <head th:replace="~{fragments/layout :: headContent}"></head>
 
-<body>
-
+  <body>
     <!-- Background Animation Container -->
     <div class="burger-rain" id="burgerRain"></div>
 
     <!-- SCENE 1: NOT LOGGED IN -->
     <th:block th:unless="${session.user}">
-        <div th:replace="~{fragments/components :: loginPrompt}"></div>
+      <div th:replace="~{fragments/components :: loginPrompt}"></div>
     </th:block>
 
     <!-- SCENE 2: LOGGED IN -->
     <th:block th:if="${session.user}">
-        
-        <!-- Navbar Fragment -->
-        <div th:replace="~{fragments/components :: navbar}"></div>
+      <!-- Navbar Fragment -->
+      <div th:replace="~{fragments/components :: navbar}"></div>
 
-        <!-- Hero Title -->
-        <div class="hero-section">
-            <div class="art-frame">
-                <img src="/images/arte.jpg" alt="Bold and Brash">
-            </div>
-            <div class="main-title" th:text="${appName}">How Many Krabby Patties?</div>
-            <small style="opacity: 0.9; color: white; font-weight: 500;">¿Puedes adivinar el número secreto?</small>
+      <!-- Hero Title -->
+      <div class="hero-section">
+        <div class="art-frame">
+          <img src="/images/arte.jpg" alt="Bold and Brash">
         </div>
+        <div class="main-title" th:text="${appName}">
+          How Many Krabby Patties?
+        </div>
+        <small style="opacity: 0.9; color: white; font-weight: 500"
+        >¿Puedes adivinar el número secreto?</small>
+      </div>
 
-        <!-- Game Board Fragment -->
-        <div th:replace="~{fragments/components :: gameBoard}"></div>
-
+      <!-- Game Board Fragment -->
+      <div th:replace="~{fragments/components :: gameBoard}"></div>
     </th:block>
 
     <!-- Game Logic Script -->
     <script th:src="@{/js/game.js}"></script>
-
-</body>
+  </body>
 </html>

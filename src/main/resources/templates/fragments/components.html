@@ -1,87 +1,144 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<body>
-
+  <body>
     <!-- 1. Navigation Fragment -->
     <nav th:fragment="navbar" class="glass-nav">
-        <ul>
-            <li>
-                <img src="/images/hamburger.png" width="30" style="vertical-align: middle;"> 
-                <strong style="margin-left:5px;">HMK</strong>
-            </li>
-        </ul>
-        <ul>
-            <li>Hola, <span th:text="${session.user.login}" style="color: #FFD700; font-weight: bold;">User</span>!</li>
-            <li>
-                <a href="/logout" role="button" class="outline contrast" 
-                   style="padding: 0.3rem 1rem; font-size: 0.8rem; border-radius: 20px; text-decoration: none;">
-                   Cerrar sesión
-                </a>
-            </li>
-        </ul>
+      <ul>
+        <li>
+          <img
+            src="/images/hamburger.png"
+            width="30"
+            style="vertical-align: middle"
+          >
+          <strong style="margin-left: 5px">HMK</strong>
+        </li>
+      </ul>
+      <ul>
+        <li>
+          Hola, <span
+            th:text="${session.user.login}"
+            style="color: #ffd700; font-weight: bold"
+          >User</span>!
+        </li>
+        <li>
+          <a
+            href="/logout"
+            role="button"
+            class="outline contrast"
+            style="padding: 0.3rem 1rem; font-size: 0.8rem; border-radius: 20px; text-decoration: none"
+          >
+            Cerrar sesión
+          </a>
+        </li>
+      </ul>
     </nav>
 
     <!-- 2. Game Board Fragment -->
     <div th:fragment="gameBoard" class="game-container">
-        <!-- Hidden Config for JS -->
-        <div id="game-config" 
-             th:data-user-id="${session.user.id}" 
-             data-game-id="1" 
-             class="hidden"></div>
+      <!-- Hidden Config for JS -->
+      <div
+        id="game-config"
+        th:data-user-id="${session.user.id}"
+        data-game-id="1"
+        class="hidden"
+      >
+      </div>
 
-        <div id="game-area">
-            <h3 style="margin-bottom: 0.5rem; color: #333;">🔢 Adivina (1-100)</h3>
-            
-            <div class="input-group">
-                <input type="number" id="guessInput" placeholder="?" min="1" max="100">
-                <button onclick="makeGuess()" class="btn-custom btn-guess">Adivinar</button>
-            </div>
-            
-            <p id="feedback" style="font-size: 1.2rem; font-weight: bold; min-height: 1.5em;"></p>
-            
-            <button id="restartBtn" onclick="startGame()" class="btn-custom btn-restart hidden">
-                Jugar de nuevo 🔄
-            </button>
+      <div id="game-area">
+        <h3 style="margin-bottom: 0.5rem; color: #333">🔢 Adivina (1-100)</h3>
+
+        <div class="input-group">
+          <input
+            type="number"
+            id="guessInput"
+            placeholder="?"
+            min="1"
+            max="100"
+          >
+          <button onclick="makeGuess()" class="btn-custom btn-guess">
+            Adivinar
+          </button>
         </div>
 
-        <hr style="margin: 2rem 0; opacity: 0.3;">
+        <p
+          id="feedback"
+          style="font-size: 1.2rem; font-weight: bold; min-height: 1.5em"
+        >
+        </p>
 
-        <!-- Leaderboard Section -->
-        <h4 style="text-align: left; margin-bottom: 0.5rem; color: #444;">🏆 Mejores Jugadores</h4>
-        <table class="leaderboard-table">
-            <thead>
-                <tr>
-                    <th>Jugador</th>
-                    <th style="text-align: right;">Intentos</th>
-                </tr>
-            </thead>
-            <tbody id="leaderboard-body">
-                <tr><td colspan="2" style="text-align: center;">Cargando puntuaciones...</td></tr>
-            </tbody>
-        </table>
+        <button
+          id="restartBtn"
+          onclick="startGame()"
+          class="btn-custom btn-restart hidden"
+        >
+          Jugar de nuevo 🔄
+        </button>
+      </div>
+
+      <hr style="margin: 2rem 0; opacity: 0.3">
+
+      <!-- Leaderboard Section -->
+      <h4 style="text-align: left; margin-bottom: 0.5rem; color: #444">
+        🏆 Mejores Jugadores
+      </h4>
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Jugador</th>
+            <th style="text-align: right">Intentos</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body">
+          <tr>
+            <td colspan="2" style="text-align: center">
+              Cargando puntuaciones...
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <!-- 3. Not Logged In Fragment -->
-    <div th:fragment="loginPrompt" class="game-container" style="max-width: 450px; margin-top: 5vh;">
-        <div class="wapo-container">
-            <img src="/images/wapo.jpg" alt="Handsome Squidward">
-        </div>
+    <div
+      th:fragment="loginPrompt"
+      class="game-container"
+      style="max-width: 450px; margin-top: 5vh"
+    >
+      <div class="wapo-container">
+        <img src="/images/wapo.jpg" alt="Handsome Squidward">
+      </div>
 
-        <h1 class="main-title" style="color: #007bff; text-shadow: none; font-size: 2rem;">HMK</h1>
-        <h3 style="color: #666; margin-top: -10px; font-size: 1rem;">El mejor juego de adivinanzas</h3>
-        
-        <hr style="margin: 1.5rem 0; opacity: 0.2;">
-        
-        <p style="margin-bottom: 2rem; color: #555;">
-            Únete al club de élite de adivinadores de hamburguesas.<br>
-            <strong>¿Eres lo suficientemente guapo para ganar?</strong>
-        </p>
-        
-        <div class="grid">
-            <a href="/login" role="button" class="btn-custom btn-guess" style="text-decoration:none;">Iniciar sesión</a>
-            <a href="/register" role="button" class="btn-custom" style="background-color: #e67e22; text-decoration:none;">Registrarse</a>
-        </div>
+      <h1
+        class="main-title"
+        style="color: #007bff; text-shadow: none; font-size: 2rem"
+      >
+        HMK
+      </h1>
+      <h3 style="color: #666; margin-top: -10px; font-size: 1rem">
+        El mejor juego de adivinanzas
+      </h3>
+
+      <hr style="margin: 1.5rem 0; opacity: 0.2">
+
+      <p style="margin-bottom: 2rem; color: #555">
+        Únete al club de élite de adivinadores de hamburguesas.<br>
+        <strong>¿Eres lo suficientemente guapo para ganar?</strong>
+      </p>
+
+      <div class="grid">
+        <a
+          href="/login"
+          role="button"
+          class="btn-custom btn-guess"
+          style="text-decoration: none"
+        >Iniciar sesión</a>
+        <a
+          href="/register"
+          role="button"
+          class="btn-custom"
+          style="background-color: #e67e22; text-decoration: none"
+        >Registrarse</a>
+      </div>
     </div>
-
-</body>
+  </body>
 </html>

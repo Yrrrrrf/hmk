@@ -13,35 +13,45 @@
 
 </div>
 
-¿Cuántas Hamburguesas? es una aplicación web de adivinanza desarrollada en una arquitectura híbrida con servlets de Kotlin como backend y una API de FastAPI en Python como capa de datos, todo ello integrado con una base de datos PostgreSQL. El juego permite a los usuarios registrar sus puntajes y competir en tablas de clasificación.
+¿Cuántas Hamburguesas? es una aplicación web de adivinanza desarrollada en una
+arquitectura híbrida con servlets de Kotlin como backend y una API de FastAPI en
+Python como capa de datos, todo ello integrado con una base de datos PostgreSQL.
+El juego permite a los usuarios registrar sus puntajes y competir en tablas de
+clasificación.
 
 ## 🛠️ Stack Tecnológico
 
--   **Backend**: Kotlin con Servlets para la lógica de negocio, complementado con un cliente HTTP Ktor.
--   **API**: Python con FastAPI para la generación automática de API REST, utilizando `prism-py`.
--   **Base de Datos**: PostgreSQL, completamente contenedorizado con Docker.
--   **Frontend**: JSP con HTML, CSS y JavaScript para la interfaz de usuario.
--   **Arquitectura**: Aplicación de múltiples capas con contenedores Docker.
+- **Backend**: Kotlin con Servlets para la lógica de negocio, complementado con
+  un cliente HTTP Ktor.
+- **API**: Python con FastAPI para la generación automática de API REST,
+  utilizando `prism-py`.
+- **Base de Datos**: PostgreSQL, completamente contenedorizado con Docker.
+- **Frontend**: JSP con HTML, CSS y JavaScript para la interfaz de usuario.
+- **Arquitectura**: Aplicación de múltiples capas con contenedores Docker.
 
 ## 🚦 Inicio Rápido
 
 ### Prerrequisitos
 
--   [Docker](https://www.docker.com/) y Docker Compose
--   [Java 21](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html) (para desarrollo con Kotlin)
--   [Kotlin 2.0.20](https://kotlinlang.org/) (para desarrollar con el backend)
+- [Docker](https://www.docker.com/) y Docker Compose
+- [Java 21](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
+  (para desarrollo con Kotlin)
+- [Kotlin 2.0.20](https://kotlinlang.org/) (para desarrollar con el backend)
 
 ### Ejecutar la Aplicación
 
-1.  **Revisar el Archivo de Entorno**: Un archivo `.env` ha sido creado en la raíz del proyecto con las credenciales de la base de datos. Puedes modificarlo si es necesario.
+1. **Revisar el Archivo de Entorno**: Un archivo `.env` ha sido creado en la
+   raíz del proyecto con las credenciales de la base de datos. Puedes
+   modificarlo si es necesario.
 
-2.  **Iniciar los servicios usando Docker Compose**:
-    ```sh
-    docker compose up -d
-    ```
+2. **Iniciar los servicios usando Docker Compose**:
+   ```sh
+   docker compose up -d
+   ```
 
-3.  **Acceder a los Servicios**:
-    -   **Aplicación Web**: [http://localhost:8080](http://localhost:8080) (o el puerto configurado para el servidor servlet)
+3. **Acceder a los Servicios**:
+   - **Aplicación Web**: [http://localhost:8080](http://localhost:8080) (o el
+     puerto configurado para el servidor servlet)
 
 ## 👥 Usuarios de Ejemplo
 
@@ -64,13 +74,13 @@ La aplicación viene con usuarios predefinidos para probarla:
 
 Además de la interfaz web, el sistema expone una API REST completa.
 
-| Método | Endpoint | Descripción | Payload / Parámetros |
-| :--- | :--- | :--- | :--- |
-| `GET` | `/api/users/all` | Listar todos los usuarios | N/A |
-| `POST` | `/api/users/save` | Registrar un usuario | `{"login": "...", "password": "..."}` |
-| `DELETE`| `/api/users/{id}`| Eliminar un usuario | N/A |
-| `POST` | `/api/scores` | Guardar un puntaje | `{"gameId": 1, "score": 10}` |
-| `GET` | `/api/scores/top` | Top 10 mejores puntajes | `?gameId=1` |
+| Método   | Endpoint          | Descripción               | Payload / Parámetros                  |
+| :------- | :---------------- | :------------------------ | :------------------------------------ |
+| `GET`    | `/api/users/all`  | Listar todos los usuarios | N/A                                   |
+| `POST`   | `/api/users/save` | Registrar un usuario      | `{"login": "...", "password": "..."}` |
+| `DELETE` | `/api/users/{id}` | Eliminar un usuario       | N/A                                   |
+| `POST`   | `/api/scores`     | Guardar un puntaje        | `{"gameId": 1, "score": 10}`          |
+| `GET`    | `/api/scores/top` | Top 10 mejores puntajes   | `?gameId=1`                           |
 
 ## 🔧 Puertos Usados
 

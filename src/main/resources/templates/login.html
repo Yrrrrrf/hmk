@@ -1,113 +1,164 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login - HMK</title>
     <!-- App Icon -->
     <link rel="icon" type="image/png" href="/images/hamburger.png">
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"
+    >
     <style>
-        body {
-            /* Deep Ocean Gradient */
-            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+      body {
+        /* Deep Ocean Gradient */
+        background: linear-gradient(
+          135deg,
+          #0f2027 0%,
+          #203a43 50%,
+          #2c5364 100%
+        );
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            border-radius: 20px;
-            padding: 3rem;
-            width: 100%;
-            max-width: 420px;
-            animation: fadeIn 0.8s ease-out;
-            color: white;
-        }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        border-radius: 20px;
+        padding: 3rem;
+        width: 100%;
+        max-width: 420px;
+        animation: fadeIn 0.8s ease-out;
+        color: white;
+      }
 
-        .logo-container {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
+      .logo-container {
+        text-align: center;
+        margin-bottom: 1.5rem;
+      }
 
-        .logo-container img {
-            width: 80px;
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
-            transition: transform 0.3s;
-        }
-        
-        .logo-container img:hover {
-            transform: scale(1.1) rotate(5deg);
-        }
+      .logo-container img {
+        width: 80px;
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+        transition: transform 0.3s;
+      }
 
-        h2 { text-align: center; margin-bottom: 2rem; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-        label { color: #e0e0e0; font-weight: 600; }
-        
-        input {
-            background: rgba(0, 0, 0, 0.3) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            color: white !important;
-            border-radius: 10px !important;
-        }
-        
-        input:focus {
-            border-color: #ffca28 !important; /* Spongebob Yellow */
-            box-shadow: 0 0 0 0.2rem rgba(255, 202, 40, 0.25) !important;
-        }
+      .logo-container img:hover {
+        transform: scale(1.1) rotate(5deg);
+      }
 
-        button {
-            background-color: #ff6b6b !important; /* Coral */
-            border: none !important;
-            border-radius: 10px !important;
-            font-weight: bold;
-            letter-spacing: 1px;
-            transition: transform 0.2s;
-        }
+      h2 {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #fff;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      label {
+        color: #e0e0e0;
+        font-weight: 600;
+      }
 
-        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4); }
-        
-        a { color: #4fc3f7; text-decoration: none; }
-        a:hover { color: #81d4fa; text-decoration: underline; }
+      input {
+        background: rgba(0, 0, 0, 0.3) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: white !important;
+        border-radius: 10px !important;
+      }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+      input:focus {
+        border-color: #ffca28 !important; /* Spongebob Yellow */
+        box-shadow: 0 0 0 0.2rem rgba(255, 202, 40, 0.25) !important;
+      }
+
+      button {
+        background-color: #ff6b6b !important; /* Coral */
+        border: none !important;
+        border-radius: 10px !important;
+        font-weight: bold;
+        letter-spacing: 1px;
+        transition: transform 0.2s;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+      }
+
+      a {
+        color: #4fc3f7;
+        text-decoration: none;
+      }
+      a:hover {
+        color: #81d4fa;
+        text-decoration: underline;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
         }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <main class="glass-card">
-        <div class="logo-container">
-            <img src="/images/hamburger.png" alt="Logo">
-        </div>
-        <h2>Bienvenido de nuevo</h2>
-        
-        <div th:if="${param.registered}" style="background: rgba(46, 204, 113, 0.2); padding: 10px; border-radius: 8px; color: #2ecc71; text-align: center; margin-bottom: 1rem;">
-            ¡Registro exitoso! Por favor inicia sesión.
-        </div>
-        <div th:if="${error}" style="background: rgba(231, 76, 60, 0.2); padding: 10px; border-radius: 8px; color: #e74c3c; text-align: center; margin-bottom: 1rem;" th:text="${error}"></div>
+      <div class="logo-container">
+        <img src="/images/hamburger.png" alt="Logo">
+      </div>
+      <h2>Bienvenido de nuevo</h2>
 
-        <form method="post" th:action="@{/login}" th:object="${userForm}">
-            <label for="login">Nombre de usuario</label>
-            <input type="text" id="login" th:field="*{login}" placeholder="Ingresa tu nombre de usuario" required />
+      <div
+        th:if="${param.registered}"
+        style="background: rgba(46, 204, 113, 0.2); padding: 10px; border-radius: 8px; color: #2ecc71; text-align: center; margin-bottom: 1rem"
+      >
+        ¡Registro exitoso! Por favor inicia sesión.
+      </div>
+      <div
+        th:if="${error}"
+        style="background: rgba(231, 76, 60, 0.2); padding: 10px; border-radius: 8px; color: #e74c3c; text-align: center; margin-bottom: 1rem"
+        th:text="${error}"
+      >
+      </div>
 
-            <label for="password">Contraseña</label>
-            <input type="password" id="password" th:field="*{password}" placeholder="Ingresa tu contraseña" required />
+      <form method="post" th:action="@{/login}" th:object="${userForm}">
+        <label for="login">Nombre de usuario</label>
+        <input
+          type="text"
+          id="login"
+          th:field="*{login}"
+          placeholder="Ingresa tu nombre de usuario"
+          required
+        />
 
-            <button type="submit" style="margin-top: 1rem;">INICIAR SESIÓN</button>
-        </form>
-        <p style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem;">
-            ¿No tienes una cuenta? <a th:href="@{/register}">Crea una</a>
-        </p>
+        <label for="password">Contraseña</label>
+        <input
+          type="password"
+          id="password"
+          th:field="*{password}"
+          placeholder="Ingresa tu contraseña"
+          required
+        />
+
+        <button type="submit" style="margin-top: 1rem">INICIAR SESIÓN</button>
+      </form>
+      <p style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem">
+        ¿No tienes una cuenta? <a th:href="@{/register}">Crea una</a>
+      </p>
     </main>
-</body>
+  </body>
 </html>
